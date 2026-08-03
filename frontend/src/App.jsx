@@ -5,13 +5,11 @@ import {
   IconSpeakerphone,
   IconSparkles,
   IconTargetArrow,
-  IconUsers,
 } from '@tabler/icons-react'
 import { Link, Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom'
 import { CampaignsAudienceWorkspace } from './pages/CampaignsAudienceWorkspace.jsx'
 import CampaignDetailPage from './pages/CampaignDetailPage.jsx'
 import CampaignsPage from './pages/CampaignsPage.jsx'
-import CreatorsPage from './pages/CreatorsPage.jsx'
 import DashboardPage from './pages/DashboardPage.jsx'
 
 const mainLinks = [
@@ -22,7 +20,6 @@ const mainLinks = [
 const plannerLinks = [
   { to: '/dashboard', label: 'Dashboard', icon: IconDashboard },
   { to: '/campaigns', label: 'Campaigns', icon: IconSpeakerphone },
-  { to: '/creators', label: 'Creators', icon: IconUsers },
 ]
 
 function WorkspaceRoute({ tab }) {
@@ -82,7 +79,6 @@ export default function App() {
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/campaigns" element={<CampaignsPage />} />
           <Route path="/campaigns/:id" element={<CampaignDetailPage />} />
-          <Route path="/creators" element={<CreatorsPage />} />
         </Routes>
       </AppShell.Main>
     </AppShell>
