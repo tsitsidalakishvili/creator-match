@@ -43,6 +43,8 @@ class RunIn(BaseModel):
     platform: str = "Instagram Feed"
     objective: str = "Brand Awareness"
     suggested_messengers: List[dict] = []
+    # BYOK: used for this run only, kept in memory, never persisted or logged.
+    api_key: Optional[str] = None
 
 
 class DecisionIn(BaseModel):
@@ -130,22 +132,25 @@ def list_runs(session: Session = Depends(get_session)):
 
 @router.post("/pipeline/runs", response_model=PipelineRun, status_code=201)
 def create_run(payload: RunIn, session: Session = Depends(get_session)):
-    if not api_key_configured():
+    user_key = (payload.api_key or "").strip()
+    if user_key and not user_key.startswith("sk-ant"):
+        raise HTTPException(status_code=422, detail="That doesn't look like an Anthropic API key (sk-ant-...).")
+    if not user_key and not api_key_configured():
         raise HTTPException(
             status_code=503,
-            detail="ANTHROPIC_API_KEY is not configured on the server. "
-            "Set it in the Render dashboard to enable the AI pipeline.",
+            detail="No API key available. Paste your Anthropic API key in the Studio, "
+            "or set ANTHROPIC_API_KEY on the server.",
         )
     if not session.get(Brand, payload.brand_id):
         raise HTTPException(status_code=404, detail="Brand not found")
     if not payload.brief.strip():
         raise HTTPException(status_code=422, detail="Brief is required")
 
-    run = PipelineRun(**payload.model_dump())
+    run = PipelineRun(**payload.model_dump(exclude={"api_key"}))
     session.add(run)
     session.commit()
     session.refresh(run)
-    start_run(run.id)
+    start_run(run.id, user_key or None)
     return run
 
 

@@ -36,8 +36,9 @@ def _now() -> str:
     return datetime.now(timezone.utc).strftime("%H:%M:%S")
 
 
-def _call_claude(system: str, prompt: str, max_tokens: int = 4096) -> str:
-    client = Anthropic()
+def _call_claude(api_key: str, system: str, prompt: str, max_tokens: int = 4096) -> str:
+    # A user-provided key (BYOK) takes precedence; falls back to the server env key.
+    client = Anthropic(api_key=api_key) if api_key else Anthropic()
     response = client.messages.create(
         model=MODEL,
         max_tokens=max_tokens,
@@ -103,7 +104,7 @@ def _save_output(session: Session, run: PipelineRun, key: str, value) -> None:
     session.refresh(run)
 
 
-def execute_run(run_id: int) -> None:
+def execute_run(run_id: int, api_key: str = None) -> None:
     with Session(engine) as session:
         run = session.get(PipelineRun, run_id)
         if not run:
@@ -130,7 +131,7 @@ def execute_run(run_id: int) -> None:
 
             # 1 — Strategy
             _log(session, run, "[PROCESSING] Strategy Agent...")
-            strategy = _call_claude(
+            strategy = _call_claude(api_key,
                 "World-class marketing strategist for the Georgian market. Sharp, "
                 "specific, commercially focused. No fluff.",
                 f"{_brand_context(brand)}\nPlatform: {run.platform}\n"
@@ -142,7 +143,7 @@ def execute_run(run_id: int) -> None:
 
             # 2 — Bilingual copy
             _log(session, run, "[PROCESSING] Copy — EN + Georgian...")
-            copy_raw = _call_claude(
+            copy_raw = _call_claude(api_key,
                 "Expert bilingual copywriter. Georgian must be natural Tbilisi "
                 "vernacular — never sound translated.",
                 f"Brand: {brand.name}\nTone: {brand.tone}\nPlatform: {run.platform}\n"
@@ -164,7 +165,7 @@ def execute_run(run_id: int) -> None:
 
             # 3 — Visual brief
             _log(session, run, "[PROCESSING] Visual Brief...")
-            visual = _call_claude(
+            visual = _call_claude(api_key,
                 "Creative director. Prompts must be vivid and commercially excellent.",
                 f"Brand: {brand.name}\nVisual style: {brand.visual_style}\n"
                 f"Colors: {brand.color_palette}\nPlatform: {run.platform}\n"
@@ -177,7 +178,7 @@ def execute_run(run_id: int) -> None:
 
             # 4 — Audit
             _log(session, run, "[PROCESSING] Brand Audit...")
-            audit = _call_claude(
+            audit = _call_claude(api_key,
                 "Senior brand quality auditor for the Georgian market. Honest and specific.",
                 f"Brand: {brand.name}\nPlatform: {run.platform}\n"
                 f"Strategy: {strategy[:300]}\n"
@@ -203,5 +204,6 @@ def execute_run(run_id: int) -> None:
             session.commit()
 
 
-def start_run(run_id: int) -> None:
-    threading.Thread(target=execute_run, args=(run_id,), daemon=True).start()
+def start_run(run_id: int, api_key: str = None) -> None:
+    # The user-provided key lives only in this thread's memory — never in the DB.
+    threading.Thread(target=execute_run, args=(run_id, api_key), daemon=True).start()

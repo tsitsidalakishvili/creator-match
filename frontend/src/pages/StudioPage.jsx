@@ -7,6 +7,7 @@ import {
   Code,
   Group,
   Loader,
+  PasswordInput,
   ScrollArea,
   Select,
   SimpleGrid,
@@ -129,6 +130,7 @@ export default function StudioPage() {
   const [objective, setObjective] = useState(OBJECTIVES[3])
   const [run, setRun] = useState(null)
   const [starting, setStarting] = useState(false)
+  const [apiKey, setApiKey] = useState('')
   const pollRef = useRef(null)
 
   useEffect(() => {
@@ -168,6 +170,7 @@ export default function StudioPage() {
       const created = await api.createRun({
         brand_id: Number(brandId), brief, platform, objective,
         suggested_messengers: suggested,
+        api_key: apiKey.trim() || undefined,
       })
       setRun(created)
       poll(created.id)
@@ -207,9 +210,9 @@ export default function StudioPage() {
       </Box>
 
       {config && !config.api_key_configured && (
-        <Alert color="yellow" icon={<IconInfoCircle size={16} />}>
-          The server has no ANTHROPIC_API_KEY configured — pipeline runs are disabled until it is
-          set in the Render dashboard (Environment → Add ANTHROPIC_API_KEY).
+        <Alert color="blue" icon={<IconInfoCircle size={16} />}>
+          Bring your own key: paste your Anthropic API key below. It is used only for your runs,
+          kept in memory on the server, and never stored. Get one at console.anthropic.com.
         </Alert>
       )}
 
@@ -217,6 +220,15 @@ export default function StudioPage() {
         <Stack gap="sm">
           <Card withBorder radius="lg" padding="lg">
             <Stack gap="sm">
+              {config && !config.api_key_configured && (
+                <PasswordInput
+                  label="Anthropic API key"
+                  placeholder="sk-ant-api03-..."
+                  value={apiKey}
+                  onChange={(e) => setApiKey(e.currentTarget.value)}
+                  error={apiKey && !apiKey.startsWith('sk-ant') ? 'Keys start with sk-ant' : undefined}
+                />
+              )}
               <Select
                 label="Client"
                 data={brands.map((b) => ({ value: String(b.id), label: `${b.emoji} ${b.name} — ${b.description}` }))}
@@ -248,7 +260,7 @@ export default function StudioPage() {
                 leftSection={<IconSparkles size={18} />}
                 onClick={startPipeline}
                 loading={starting || run?.status === 'running'}
-                disabled={config && !config.api_key_configured}
+                disabled={config && !config.api_key_configured && !apiKey.trim().startsWith('sk-ant')}
               >
                 {run?.status === 'running' ? 'Pipeline running…' : 'Run pipeline'}
               </Button>
