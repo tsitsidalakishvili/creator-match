@@ -1,6 +1,25 @@
 # CreatorMatch
 
-A standalone **creator ↔ campaign matching app**. Brands write a campaign brief with a target
+A standalone **creator ↔ campaign matching app**.
+
+## Campaigns & Audience module (primary)
+
+The app's core is the **Campaigns & Audience** workspace ported from the Freedom Square platform:
+
+- **Match** — enter a campaign, issue, or cause; the issue area is inferred from keywords and the
+  roster is ranked by a niche-affinity matrix + engagement + reach, with per-messenger reasons and
+  campaign projections (estimated reach / engagement / clicks by content format: Reel, Post,
+  Story, Collab).
+- **Roster** — a real roster of ~67 Georgian creators/voices with actual Instagram/TikTok/X links
+  and follower counts, filterable by topic, with CSV import/export, influence tiers, and
+  follower-trend snapshots (recorded in localStorage, ▲▼ arrows show real change between
+  snapshots).
+
+This module runs fully client-side (`frontend/src/talentMatchData.js` holds the roster and pure
+matching/projection logic) — the frontend deploys standalone to Vercel with no backend required.
+The FastAPI backend below powers the optional "Planner (demo)" pages.
+
+## Planner (demo) Brands write a campaign brief with a target
 audience (niches, channels, geography, age range, languages, budget); creators have audience
 profiles; a transparent scoring engine ranks every creator against every campaign **0–100** with a
 per-dimension breakdown and plain-English reasons. Shortlist, invite, and track creators per
