@@ -23,6 +23,7 @@ import {
   IconBrandInstagram,
   IconBrandTiktok,
   IconBrandX,
+  IconBrandYoutube,
   IconCamera,
   IconChartDots,
   IconDotsVertical,
@@ -74,6 +75,7 @@ function PlatformIcons({ creator }) {
     { href: creator.ig, icon: IconBrandInstagram, label: 'Instagram' },
     { href: creator.tt, icon: IconBrandTiktok, label: 'TikTok' },
     { href: creator.x, icon: IconBrandX, label: 'X / Twitter' },
+    { href: creator.yt, icon: IconBrandYoutube, label: 'YouTube' },
   ].filter((l) => l.href)
   return (
     <Group gap={4} wrap="nowrap">
@@ -118,7 +120,7 @@ export default function RosterPage() {
     { label: 'Messengers', value: String(summary.count), icon: IconUsers, color: 'violet' },
     { label: 'Combined reach', value: formatCompact(summary.totalReach), icon: IconChartDots, color: 'blue' },
     { label: 'Avg engagement', value: `${summary.avgEng}%`, icon: IconBolt, color: 'orange' },
-    { label: 'On X / TikTok', value: String(summary.withX + summary.withTikTok), icon: IconBrandX, color: 'grape' },
+    { label: 'On YouTube', value: String(summary.withYouTube), icon: IconBrandYoutube, color: 'red' },
   ]
 
   const handleImportFile = (event) => {
@@ -206,6 +208,7 @@ export default function RosterPage() {
         <Table.Td>{r.igF ? formatCompact(r.igF) : '—'}</Table.Td>
         <Table.Td>{r.ttF ? formatCompact(r.ttF) : '—'}</Table.Td>
         <Table.Td>{r.xF ? formatCompact(r.xF) : '—'}</Table.Td>
+        <Table.Td>{r.ytF ? formatCompact(r.ytF) : '—'}</Table.Td>
         <Table.Td>{r.eng}%</Table.Td>
         <Table.Td>{tier ? tier.tier : '—'}</Table.Td>
         <Table.Td>
@@ -317,6 +320,7 @@ export default function RosterPage() {
                 <Table.Th>Instagram</Table.Th>
                 <Table.Th>TikTok</Table.Th>
                 <Table.Th>X</Table.Th>
+                <Table.Th>YouTube</Table.Th>
                 <Table.Th>Eng%</Table.Th>
                 <Table.Th>Tier</Table.Th>
                 <Table.Th>Links</Table.Th>
@@ -363,6 +367,7 @@ export default function RosterPage() {
                     r.igF ? `IG ${formatCompact(r.igF)}` : null,
                     r.ttF ? `TT ${formatCompact(r.ttF)}` : null,
                     r.xF ? `X ${formatCompact(r.xF)}` : null,
+                    r.ytF ? `YT ${formatCompact(r.ytF)}` : null,
                   ]
                     .filter(Boolean)
                     .join(' · ')}

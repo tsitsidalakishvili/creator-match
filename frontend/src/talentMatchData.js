@@ -143,8 +143,8 @@ const SEED = [
   { name: 'Trio Mandili', ig: 'https://www.instagram.com/trio_mandili/', igUser: 'trio_mandili', tt: 'https://www.tiktok.com/@triomandilliofficial', ttUser: 'triomandilliofficial', niche: 'music', igF: 391000, ttF: 20000 },
   { name: 'Khatia Buniatishvili', ig: 'https://www.instagram.com/khatiabuniatishvili/', igUser: 'khatiabuniatishvili', tt: null, ttUser: null, niche: 'music', igF: 350000, ttF: 0 },
   { name: 'Katie Melua', ig: 'https://www.instagram.com/katiemeluaofficial/', igUser: 'katiemeluaofficial', tt: null, ttUser: null, niche: 'music', igF: 115000, ttF: 0 },
-  { name: 'Hungryman', ig: 'https://www.instagram.com/hungrymantv/', igUser: 'hungrymantv', tt: 'https://www.tiktok.com/@hungryman.ge', ttUser: 'hungryman.ge', niche: 'comedy', igF: 136000, ttF: 463000 },
-  { name: 'Giorgi Danelia', ig: 'https://www.instagram.com/giodannell/', igUser: 'giodannell', tt: 'https://www.tiktok.com/@giodannell', ttUser: 'giodannell', niche: 'entertainment', igF: 160000, ttF: 705000 },
+  { name: 'Hungryman', ig: 'https://www.instagram.com/hungrymantv/', igUser: 'hungrymantv', tt: 'https://www.tiktok.com/@hungryman.ge', ttUser: 'hungryman.ge', yt: 'https://www.youtube.com/@hungrymantv', ytUser: 'hungrymantv', niche: 'comedy', igF: 136000, ttF: 463000, ytF: 599000 },
+  { name: 'Giorgi Danelia', ig: 'https://www.instagram.com/giodannell/', igUser: 'giodannell', tt: 'https://www.tiktok.com/@giodannell', ttUser: 'giodannell', yt: 'https://www.youtube.com/@Giodannell', ytUser: 'Giodannell', niche: 'entertainment', igF: 160000, ttF: 705000, ytF: 342000 },
   { name: 'Nanuka Zhorzholiani', ig: 'https://www.instagram.com/nanukashow/', igUser: 'nanukashow', tt: 'https://www.tiktok.com/@nanukashow', ttUser: 'nanukashow', niche: 'news', igF: 396000, ttF: 106500 },
   { name: 'Ekaterine Kotrikadze', ig: 'https://www.instagram.com/katyakotrikadze/', igUser: 'katyakotrikadze', tt: null, ttUser: null, niche: 'news', igF: 47000, ttF: 0 },
   { name: 'Nino Cherkezishvili', ig: 'https://www.instagram.com/cherrys_fitness/', igUser: 'cherrys_fitness', tt: null, ttUser: null, niche: 'health', igF: 116000, ttF: 0 },
@@ -152,11 +152,16 @@ const SEED = [
   { name: 'Ana Wei', ig: 'https://www.instagram.com/ana__wei/', igUser: 'ana__wei', tt: null, ttUser: null, niche: 'health', igF: 39700, ttF: 0 },
   { name: 'Georgian Mom Life', ig: 'https://www.instagram.com/georgianmomlife/', igUser: 'georgianmomlife', tt: null, ttUser: null, niche: 'health', igF: 6400, ttF: 0 },
   { name: 'Codnismoqvare Podcast', ig: 'https://www.instagram.com/kpodcast_ge/', igUser: 'kpodcast_ge', tt: null, ttUser: null, niche: 'education', igF: 30200, ttF: 0 },
-  { name: 'Nana Janashia', ig: 'https://www.instagram.com/techworld_with_nana/', igUser: 'techworld_with_nana', tt: null, ttUser: null, niche: 'tech', igF: 46000, ttF: 0 },
+  { name: 'Nana Janashia', ig: 'https://www.instagram.com/techworld_with_nana/', igUser: 'techworld_with_nana', tt: null, ttUser: null, yt: 'https://www.youtube.com/@TechWorldwithNana', ytUser: 'TechWorldwithNana', niche: 'tech', igF: 46000, ttF: 0, ytF: 1470000 },
   { name: 'QIMERA', ig: 'https://www.instagram.com/qimera__/', igUser: 'qimera__', tt: 'https://www.tiktok.com/@qimeraa', ttUser: 'qimeraa', niche: 'gaming', igF: 9400, ttF: 125000 },
   { name: 'Amiko Zarkua', ig: 'https://www.instagram.com/amikozarkua/', igUser: 'amikozarkua', tt: 'https://www.tiktok.com/@amikozarkuagames', ttUser: 'amikozarkuagames', niche: 'gaming', igF: 31000, ttF: 0 },
   { name: 'Shota Vlogger', ig: null, igUser: null, tt: 'https://www.tiktok.com/@shotavlogger', ttUser: 'shotavlogger', niche: 'gaming', igF: 0, ttF: 34000 },
   { name: 'Meri Darchia', ig: 'https://www.instagram.com/meriway1/', igUser: 'meriway1', tt: null, ttUser: null, niche: 'business', igF: 15000, ttF: 0 },
+
+  // ── YouTubers (subscriber counts read from public channel pages, Aug 2026).
+  { name: 'Marselini', yt: 'https://www.youtube.com/@marselini12', ytUser: 'marselini12', niche: 'gaming', ytF: 180000 },
+  { name: 'NikaTMG', yt: 'https://www.youtube.com/@NikaTMG', ytUser: 'NikaTMG', niche: 'gaming', ytF: 520000 },
+  { name: "Rati's Bar", yt: 'https://www.youtube.com/@ratisbar', ytUser: 'ratisbar', niche: 'food', ytF: 317000 },
 
   // ── Civic voices (politics / news / activism). Primarily active on X/Twitter;
   // follower counts approximate (~Aug 2026). Entries without a sourced count are
@@ -198,13 +203,16 @@ export function enrichCreator(raw) {
   const igF = Number(raw.igF) || 0
   const ttF = Number(raw.ttF) || 0
   const xF = Number(raw.xF) || 0
-  const total = igF + ttF + xF
-  const avgViews = Math.round(igF * 0.4 + ttF * 0.62 + xF * 0.25) || Math.round(total * 0.35)
+  const ytF = Number(raw.ytF) || 0
+  const total = igF + ttF + xF + ytF
+  const avgViews =
+    Math.round(igF * 0.4 + ttF * 0.62 + xF * 0.25 + ytF * 0.3) || Math.round(total * 0.35)
   return {
     ...raw,
     igF,
     ttF,
     xF,
+    ytF,
     total,
     avgViews,
     eng: raw.eng != null && raw.eng !== '' ? Number(raw.eng) : estimateEngagement(total),
@@ -298,10 +306,11 @@ export function rosterSummary(roster) {
   const total = roster.reduce((s, r) => s + r.total, 0)
   const withTikTok = roster.filter((r) => r.ttF > 0).length
   const withX = roster.filter((r) => (r.xF || 0) > 0).length
+  const withYouTube = roster.filter((r) => (r.ytF || 0) > 0).length
   const avgEng = roster.length
     ? (roster.reduce((s, r) => s + Number(r.eng || 0), 0) / roster.length).toFixed(1)
     : '0.0'
-  return { count: roster.length, totalReach: total, withTikTok, withX, avgEng }
+  return { count: roster.length, totalReach: total, withTikTok, withX, withYouTube, avgEng }
 }
 
 // ── follower-trend (stock-style arrows) ───────────────────────
@@ -313,7 +322,7 @@ export function rosterSummary(roster) {
 // Stable identity for matching a creator across snapshots (handles rename of
 // display name but keeps the same social handle).
 export function creatorKey(creator) {
-  return (creator.igUser || creator.ttUser || creator.name || '').toLowerCase()
+  return (creator.igUser || creator.ttUser || creator.ytUser || creator.name || '').toLowerCase()
 }
 
 // Build a snapshot of the current roster: { date, totals: { key: total } }.
@@ -370,9 +379,15 @@ function usernameFromUrl(url) {
 }
 
 // Map parsed CSV rows (array-of-arrays, first row = header) into enriched creators.
-// Expected columns: Name, Instagram, IG Followers, TikTok, TT Followers,
-// X/Twitter, X Followers, Eng%, Niche
+// New format columns: Name, Instagram, IG Followers, TikTok, TT Followers,
+// X/Twitter, X Followers, YouTube, YT Followers, Eng%, Niche
+// The legacy format (without the two YouTube columns) is detected via the header
+// and still imports correctly.
 export function rowsToRoster(rows) {
+  const header = (rows[0] || []).map((h) => String(h || '').toLowerCase())
+  const hasYouTube = header.some((h) => h.includes('youtube') || h.includes('yt '))
+  const engIdx = hasYouTube ? 9 : 7
+  const nicheIdx = hasYouTube ? 10 : 8
   const out = []
   for (let i = 1; i < rows.length; i += 1) {
     const r = rows[i]
@@ -382,6 +397,7 @@ export function rowsToRoster(rows) {
     const ig = r[1] ? String(r[1]).trim() : null
     const tt = r[3] ? String(r[3]).trim() : null
     const x = r[5] ? String(r[5]).trim() : null
+    const yt = hasYouTube && r[7] ? String(r[7]).trim() : null
     out.push(
       enrichCreator({
         name,
@@ -391,11 +407,14 @@ export function rowsToRoster(rows) {
         ttUser: usernameFromUrl(tt),
         x: x || null,
         xUser: usernameFromUrl(x),
-        niche: r[8] ? String(r[8]).trim().toLowerCase() : inferNiche(name),
+        yt: yt || null,
+        ytUser: usernameFromUrl(yt),
+        niche: r[nicheIdx] ? String(r[nicheIdx]).trim().toLowerCase() : inferNiche(name),
         igF: parseFollowerCount(r[2]),
         ttF: parseFollowerCount(r[4]),
         xF: parseFollowerCount(r[6]),
-        eng: r[7] !== undefined && r[7] !== '' ? parseFloat(r[7]) : undefined,
+        ytF: hasYouTube ? parseFollowerCount(r[8]) : 0,
+        eng: r[engIdx] !== undefined && r[engIdx] !== '' ? parseFloat(r[engIdx]) : undefined,
         real: false,
       }),
     )
@@ -405,7 +424,7 @@ export function rowsToRoster(rows) {
 
 // Serialize the roster back to CSV rows for export.
 export function rosterToRows(roster) {
-  const header = ['Name', 'Instagram', 'IG Followers', 'TikTok', 'TT Followers', 'X/Twitter', 'X Followers', 'Eng%', 'Niche', 'Total', 'Data']
+  const header = ['Name', 'Instagram', 'IG Followers', 'TikTok', 'TT Followers', 'X/Twitter', 'X Followers', 'YouTube', 'YT Followers', 'Eng%', 'Niche', 'Total', 'Data']
   const body = roster.map((r) => [
     r.name,
     r.ig || '',
@@ -414,6 +433,8 @@ export function rosterToRows(roster) {
     r.ttF || 0,
     r.x || '',
     r.xF || 0,
+    r.yt || '',
+    r.ytF || 0,
     r.eng,
     r.niche,
     r.total,

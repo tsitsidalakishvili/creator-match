@@ -23,6 +23,7 @@ import {
   IconBrandInstagram,
   IconBrandTiktok,
   IconBrandX,
+  IconBrandYoutube,
   IconClick,
   IconEye,
   IconHeart,
@@ -68,6 +69,7 @@ function PlatformLinks({ creator }) {
     { href: creator.ig, icon: IconBrandInstagram, label: 'Instagram' },
     { href: creator.tt, icon: IconBrandTiktok, label: 'TikTok' },
     { href: creator.x, icon: IconBrandX, label: 'X / Twitter' },
+    { href: creator.yt, icon: IconBrandYoutube, label: 'YouTube' },
   ].filter((l) => l.href)
   if (!links.length) return null
   return (
