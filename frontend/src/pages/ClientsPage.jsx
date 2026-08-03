@@ -14,10 +14,46 @@ import {
   Title,
 } from '@mantine/core'
 import { notifications } from '@mantine/notifications'
-import { IconDatabase, IconPencil, IconPlus, IconTrash, IconUpload } from '@tabler/icons-react'
+import { IconDatabase, IconPencil, IconPlus, IconSparkles, IconTrash, IconUpload } from '@tabler/icons-react'
 import Papa from 'papaparse'
 import { useEffect, useRef, useState } from 'react'
 import { api } from '../api.js'
+import RunResults from '../components/RunResults.jsx'
+
+const RUN_COLORS = {
+  running: 'blue', awaiting_approval: 'yellow', approved: 'green', rejected: 'red', failed: 'red',
+}
+
+function CreationsSection({ brand, onOpen }) {
+  const [runs, setRuns] = useState([])
+
+  useEffect(() => {
+    api.listRuns(brand.id).then(setRuns).catch(() => {})
+  }, [brand.id])
+
+  if (!runs.length) return null
+  return (
+    <Box mt="sm">
+      <Group gap={4} mb={4}>
+        <IconSparkles size={14} color="var(--mantine-color-dimmed)" />
+        <Text size="xs" c="dimmed" fw={600} tt="uppercase">Creations</Text>
+      </Group>
+      <Stack gap={4}>
+        {runs.slice(0, 5).map((r) => (
+          <Group key={r.id} justify="space-between" gap="xs" wrap="nowrap"
+            style={{ cursor: 'pointer' }} onClick={() => onOpen(r)}>
+            <Text size="xs" truncate style={{ flex: 1 }}>
+              {r.brief}
+            </Text>
+            <Badge size="xs" variant="light" color={RUN_COLORS[r.status] || 'gray'}>
+              {r.status.replace('_', ' ')}
+            </Badge>
+          </Group>
+        ))}
+      </Stack>
+    </Box>
+  )
+}
 
 function DataSection({ brand }) {
   const [datasets, setDatasets] = useState([])
@@ -120,6 +156,7 @@ export default function ClientsPage() {
   const [editing, setEditing] = useState(null) // brand object or 'new'
   const [form, setForm] = useState(empty)
   const [saving, setSaving] = useState(false)
+  const [viewRun, setViewRun] = useState(null)
 
   const load = () => api.listBrands().then(setBrands).catch((e) =>
     notifications.show({ color: 'red', title: 'API error', message: e.message }))
@@ -193,6 +230,7 @@ export default function ClientsPage() {
                 ))}
               </Stack>
               <DataSection brand={b} />
+              <CreationsSection brand={b} onOpen={setViewRun} />
               <Button
                 variant="light" size="xs" mt="md" fullWidth
                 leftSection={<IconPencil size={14} />}
@@ -204,6 +242,20 @@ export default function ClientsPage() {
           ))}
         </SimpleGrid>
       )}
+
+      <Modal
+        opened={viewRun !== null}
+        onClose={() => setViewRun(null)}
+        title={viewRun ? `Creation · ${viewRun.platform} · ${viewRun.status.replace('_', ' ')}` : ''}
+        size="xl"
+      >
+        {viewRun && (
+          <Stack gap="sm">
+            <Text size="sm" c="dimmed">{viewRun.brief}</Text>
+            <RunResults run={viewRun} />
+          </Stack>
+        )}
+      </Modal>
 
       <Modal
         opened={editing !== null}

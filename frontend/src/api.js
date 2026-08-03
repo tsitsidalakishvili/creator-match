@@ -45,8 +45,14 @@ export const api = {
   deleteDataset: (brandId, datasetId) =>
     request(`/api/brands/${brandId}/datasets/${datasetId}`, { method: 'DELETE' }),
 
+  connectInstagram: (brandId, data) =>
+    request(`/api/brands/${brandId}/connect/instagram`, {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
+
   pipelineConfig: () => request('/api/pipeline/config'),
-  listRuns: () => request('/api/pipeline/runs'),
+  listRuns: (brandId) => request(`/api/pipeline/runs${brandId ? `?brand_id=${brandId}` : ''}`),
   getRun: (id) => request(`/api/pipeline/runs/${id}`),
   createRun: (data) => request('/api/pipeline/runs', { method: 'POST', body: JSON.stringify(data) }),
   decideRun: (id, decision) =>

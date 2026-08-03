@@ -93,6 +93,8 @@ class PipelineRun(SQLModel, table=True):
     brief: str
     platform: str = "Instagram Feed"
     objective: str = "Brand Awareness"
+    provider: str = "anthropic"
+    model: str = ""
     # running | awaiting_approval | approved | rejected | failed
     status: str = "running"
     suggested_messengers: List[dict] = Field(default_factory=list, sa_column=Column(JSON))
