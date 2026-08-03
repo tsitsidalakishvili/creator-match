@@ -2,7 +2,24 @@
 
 A standalone **creator ↔ campaign matching app**.
 
-## Campaigns & Audience module (primary)
+## Studio — AI marketing team (primary)
+
+The app's centerpiece is an **agentic marketing pipeline** (inspired by the easy-ai concept,
+executed server-side the way AIKanbanTeam runs its agents):
+
+- **Clients** hold a *Brand DNA* profile (tone, audience, key message, Georgian tagline, visual
+  style, palette) that every agent reads on every run, plus uploaded **page data** (CSV exports
+  from Facebook/Instagram/LinkedIn) that grounds strategy in real performance.
+- **Studio** takes a campaign brief and runs four Claude agents sequentially on the backend —
+  Strategy → bilingual Copy (EN + natural Tbilisi Georgian) → Visual brief (image-gen prompts) →
+  Brand audit — streaming progress/logs to the UI, ending at a **human approval gate**.
+- The **roster ties in automatically**: the top-matched messengers for the brief are passed to the
+  strategist as distribution context.
+
+Requires `ANTHROPIC_API_KEY` on the backend (Render → Environment). Model: `claude-opus-4-8` with
+adaptive thinking.
+
+## Campaigns & Audience module
 
 The app's core is the **Campaigns & Audience** workspace ported from the Freedom Square platform:
 

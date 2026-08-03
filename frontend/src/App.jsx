@@ -11,6 +11,7 @@ import {
 } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
 import {
+  IconBuildingStore,
   IconDashboard,
   IconListDetails,
   IconMoon,
@@ -18,17 +19,22 @@ import {
   IconSparkles,
   IconSun,
   IconTargetArrow,
+  IconWand,
 } from '@tabler/icons-react'
 import { useEffect } from 'react'
 import { Link, Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import { RosterProvider } from './rosterStore.jsx'
 import CampaignDetailPage from './pages/CampaignDetailPage.jsx'
 import CampaignsPage from './pages/CampaignsPage.jsx'
+import ClientsPage from './pages/ClientsPage.jsx'
 import DashboardPage from './pages/DashboardPage.jsx'
 import MatchPage from './pages/MatchPage.jsx'
 import RosterPage from './pages/RosterPage.jsx'
+import StudioPage from './pages/StudioPage.jsx'
 
 const mainLinks = [
+  { to: '/studio', label: 'Studio', description: 'AI marketing team pipeline', icon: IconWand },
+  { to: '/clients', label: 'Clients', description: 'Brand DNA profiles', icon: IconBuildingStore },
   { to: '/match', label: 'Match', description: 'Find messengers for a campaign', icon: IconTargetArrow },
   { to: '/roster', label: 'Roster', description: 'Browse & manage creators', icon: IconListDetails },
 ]
@@ -112,7 +118,9 @@ export default function App() {
         </AppShell.Navbar>
         <AppShell.Main>
           <Routes>
-            <Route path="/" element={<Navigate to="/match" replace />} />
+            <Route path="/" element={<Navigate to="/studio" replace />} />
+            <Route path="/studio" element={<StudioPage />} />
+            <Route path="/clients" element={<ClientsPage />} />
             <Route path="/match" element={<MatchPage />} />
             <Route path="/roster" element={<RosterPage />} />
             <Route path="/dashboard" element={<DashboardPage />} />

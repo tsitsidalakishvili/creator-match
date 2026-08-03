@@ -34,6 +34,27 @@ export const api = {
     request(`/api/campaigns/${id}`, { method: 'PATCH', body: JSON.stringify(data) }),
   deleteCampaign: (id) => request(`/api/campaigns/${id}`, { method: 'DELETE' }),
 
+  listBrands: () => request('/api/brands'),
+  createBrand: (data) => request('/api/brands', { method: 'POST', body: JSON.stringify(data) }),
+  updateBrand: (id, data) =>
+    request(`/api/brands/${id}`, { method: 'PATCH', body: JSON.stringify(data) }),
+
+  listDatasets: (brandId) => request(`/api/brands/${brandId}/datasets`),
+  uploadDataset: (brandId, data) =>
+    request(`/api/brands/${brandId}/datasets`, { method: 'POST', body: JSON.stringify(data) }),
+  deleteDataset: (brandId, datasetId) =>
+    request(`/api/brands/${brandId}/datasets/${datasetId}`, { method: 'DELETE' }),
+
+  pipelineConfig: () => request('/api/pipeline/config'),
+  listRuns: () => request('/api/pipeline/runs'),
+  getRun: (id) => request(`/api/pipeline/runs/${id}`),
+  createRun: (data) => request('/api/pipeline/runs', { method: 'POST', body: JSON.stringify(data) }),
+  decideRun: (id, decision) =>
+    request(`/api/pipeline/runs/${id}/decision`, {
+      method: 'POST',
+      body: JSON.stringify({ decision }),
+    }),
+
   getMatches: (campaignId) => request(`/api/campaigns/${campaignId}/matches`),
   setMatchStatus: (campaignId, creatorId, status) =>
     request(`/api/campaigns/${campaignId}/matches/${creatorId}/status`, {

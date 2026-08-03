@@ -52,6 +52,56 @@ class Campaign(SQLModel, table=True):
     created_at: datetime = Field(default_factory=utcnow)
 
 
+class Brand(SQLModel, table=True):
+    """Brand DNA profile — injected into every pipeline agent's prompt."""
+
+    id: Optional[int] = Field(default=None, primary_key=True)
+    name: str
+    emoji: str = "✨"
+    description: str = ""
+    tone: str = ""
+    audience: str = ""
+    key_message: str = ""
+    georgian_tagline: str = ""
+    visual_style: str = ""
+    color_palette: str = ""
+    created_at: datetime = Field(default_factory=utcnow)
+
+
+class BrandDataset(SQLModel, table=True):
+    """Aggregated client data (e.g. FB/IG/LinkedIn page exports) uploaded as CSV.
+
+    A sample of rows is injected into the strategy agent's context so campaigns
+    are grounded in the client's real performance data.
+    """
+
+    id: Optional[int] = Field(default=None, primary_key=True)
+    brand_id: int = Field(index=True, foreign_key="brand.id")
+    source: str = "csv"  # facebook | instagram | linkedin | csv
+    filename: str = ""
+    columns: List[str] = Field(default_factory=list, sa_column=Column(JSON))
+    rows: List[dict] = Field(default_factory=list, sa_column=Column(JSON))
+    row_count: int = 0
+    created_at: datetime = Field(default_factory=utcnow)
+
+
+class PipelineRun(SQLModel, table=True):
+    """One execution of the marketing agent pipeline (strategy → copy → visual → audit)."""
+
+    id: Optional[int] = Field(default=None, primary_key=True)
+    brand_id: int = Field(foreign_key="brand.id")
+    brief: str
+    platform: str = "Instagram Feed"
+    objective: str = "Brand Awareness"
+    # running | awaiting_approval | approved | rejected | failed
+    status: str = "running"
+    suggested_messengers: List[dict] = Field(default_factory=list, sa_column=Column(JSON))
+    outputs: dict = Field(default_factory=dict, sa_column=Column(JSON))
+    logs: List[dict] = Field(default_factory=list, sa_column=Column(JSON))
+    error: str = ""
+    created_at: datetime = Field(default_factory=utcnow)
+
+
 class Match(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     campaign_id: int = Field(index=True, foreign_key="campaign.id")
