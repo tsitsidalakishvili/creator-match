@@ -8,6 +8,7 @@ from .database import engine, get_session, init_db
 from .models import Campaign, Creator, Match
 from .routes_campaigns import router as campaigns_router
 from .routes_creators import router as creators_router
+from .routes_feedback import router as feedback_router
 from .routes_pipeline import router as pipeline_router
 from .seed import seed_if_empty
 
@@ -29,6 +30,7 @@ app.add_middleware(
 app.include_router(creators_router)
 app.include_router(campaigns_router)
 app.include_router(pipeline_router)
+app.include_router(feedback_router)
 
 
 @app.on_event("startup")

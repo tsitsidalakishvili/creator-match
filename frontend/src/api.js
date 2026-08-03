@@ -61,6 +61,8 @@ export const api = {
       body: JSON.stringify({ decision }),
     }),
 
+  sendFeedback: (data) => request('/api/feedback', { method: 'POST', body: JSON.stringify(data) }),
+
   getMatches: (campaignId) => request(`/api/campaigns/${campaignId}/matches`),
   setMatchStatus: (campaignId, creatorId, status) =>
     request(`/api/campaigns/${campaignId}/matches/${creatorId}/status`, {

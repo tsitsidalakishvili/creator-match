@@ -104,6 +104,17 @@ class PipelineRun(SQLModel, table=True):
     created_at: datetime = Field(default_factory=utcnow)
 
 
+class FeedbackEntry(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    name: str = ""
+    email: str = ""
+    message: str
+    page: str = ""
+    channel: str = "sidebar_feedback"
+    email_status: str = "not_configured"  # sent | failed | not_configured
+    created_at: datetime = Field(default_factory=utcnow)
+
+
 class Match(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     campaign_id: int = Field(index=True, foreign_key="campaign.id")

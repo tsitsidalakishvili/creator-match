@@ -14,6 +14,7 @@ import {
   IconBuildingStore,
   IconDashboard,
   IconListDetails,
+  IconMessage2,
   IconMoon,
   IconSpeakerphone,
   IconSparkles,
@@ -23,6 +24,7 @@ import {
 } from '@tabler/icons-react'
 import { useEffect } from 'react'
 import { Link, Navigate, Route, Routes, useLocation } from 'react-router-dom'
+import FeedbackDrawer from './components/FeedbackDrawer.jsx'
 import { RosterProvider } from './rosterStore.jsx'
 import CampaignDetailPage from './pages/CampaignDetailPage.jsx'
 import CampaignsPage from './pages/CampaignsPage.jsx'
@@ -63,6 +65,7 @@ function ColorSchemeToggle() {
 export default function App() {
   const location = useLocation()
   const [navOpened, { toggle: toggleNav, close: closeNav }] = useDisclosure(false)
+  const [feedbackOpened, { open: openFeedback, close: closeFeedback }] = useDisclosure(false)
 
   useEffect(() => {
     closeNav()
@@ -106,9 +109,21 @@ export default function App() {
                 campaigns &amp; audience
               </Text>
             </Group>
-            <ColorSchemeToggle />
+            <Group gap={4} wrap="nowrap">
+              <ActionIcon
+                variant="subtle"
+                color="gray"
+                size="lg"
+                aria-label="Send feedback"
+                onClick={openFeedback}
+              >
+                <IconMessage2 size={18} />
+              </ActionIcon>
+              <ColorSchemeToggle />
+            </Group>
           </Group>
         </AppShell.Header>
+        <FeedbackDrawer opened={feedbackOpened} onClose={closeFeedback} />
         <AppShell.Navbar p="xs">
           {renderLinks(mainLinks)}
           <Text size="xs" c="dimmed" fw={600} tt="uppercase" mt="md" mb={4} px="xs">
