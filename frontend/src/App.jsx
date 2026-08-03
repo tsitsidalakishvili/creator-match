@@ -1,20 +1,36 @@
-import { AppShell, Group, NavLink, Text, ThemeIcon } from '@mantine/core'
+import {
+  ActionIcon,
+  AppShell,
+  Burger,
+  Group,
+  NavLink,
+  Text,
+  ThemeIcon,
+  useComputedColorScheme,
+  useMantineColorScheme,
+} from '@mantine/core'
+import { useDisclosure } from '@mantine/hooks'
 import {
   IconDashboard,
   IconListDetails,
+  IconMoon,
   IconSpeakerphone,
   IconSparkles,
+  IconSun,
   IconTargetArrow,
 } from '@tabler/icons-react'
-import { Link, Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom'
-import { CampaignsAudienceWorkspace } from './pages/CampaignsAudienceWorkspace.jsx'
+import { useEffect } from 'react'
+import { Link, Navigate, Route, Routes, useLocation } from 'react-router-dom'
+import { RosterProvider } from './rosterStore.jsx'
 import CampaignDetailPage from './pages/CampaignDetailPage.jsx'
 import CampaignsPage from './pages/CampaignsPage.jsx'
 import DashboardPage from './pages/DashboardPage.jsx'
+import MatchPage from './pages/MatchPage.jsx'
+import RosterPage from './pages/RosterPage.jsx'
 
 const mainLinks = [
-  { to: '/match', label: 'Match', icon: IconTargetArrow },
-  { to: '/roster', label: 'Roster', icon: IconListDetails },
+  { to: '/match', label: 'Match', description: 'Find messengers for a campaign', icon: IconTargetArrow },
+  { to: '/roster', label: 'Roster', description: 'Browse & manage creators', icon: IconListDetails },
 ]
 
 const plannerLinks = [
@@ -22,19 +38,31 @@ const plannerLinks = [
   { to: '/campaigns', label: 'Campaigns', icon: IconSpeakerphone },
 ]
 
-function WorkspaceRoute({ tab }) {
-  const navigate = useNavigate()
+function ColorSchemeToggle() {
+  const { setColorScheme } = useMantineColorScheme()
+  const computed = useComputedColorScheme('light')
   return (
-    <CampaignsAudienceWorkspace
-      activeTabOverride={tab}
-      onTabChange={(next) => navigate(next === 'roster' ? '/roster' : '/match')}
-      showIntro
-    />
+    <ActionIcon
+      variant="subtle"
+      color="gray"
+      size="lg"
+      aria-label="Toggle color scheme"
+      onClick={() => setColorScheme(computed === 'light' ? 'dark' : 'light')}
+    >
+      {computed === 'light' ? <IconMoon size={18} /> : <IconSun size={18} />}
+    </ActionIcon>
   )
 }
 
 export default function App() {
   const location = useLocation()
+  const [navOpened, { toggle: toggleNav, close: closeNav }] = useDisclosure(false)
+
+  useEffect(() => {
+    closeNav()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.pathname])
+
   const renderLinks = (links) =>
     links.map((link) => (
       <NavLink
@@ -42,45 +70,57 @@ export default function App() {
         component={Link}
         to={link.to}
         label={link.label}
+        description={link.description}
         leftSection={<link.icon size={18} />}
         active={location.pathname.startsWith(link.to)}
         variant="light"
         style={{ borderRadius: 8 }}
+        onClick={closeNav}
       />
     ))
 
   return (
-    <AppShell header={{ height: 56 }} navbar={{ width: 220, breakpoint: 'sm' }} padding="md">
-      <AppShell.Header>
-        <Group h="100%" px="md" gap="xs">
-          <ThemeIcon variant="gradient" gradient={{ from: 'violet', to: 'cyan' }} radius="md">
-            <IconSparkles size={18} />
-          </ThemeIcon>
-          <Text fw={700} size="lg">
-            CreatorMatch
+    <RosterProvider>
+      <AppShell
+        header={{ height: 56 }}
+        navbar={{ width: 230, breakpoint: 'sm', collapsed: { mobile: !navOpened } }}
+        padding={{ base: 'sm', sm: 'md' }}
+      >
+        <AppShell.Header>
+          <Group h="100%" px="md" gap="xs" justify="space-between" wrap="nowrap">
+            <Group gap="xs" wrap="nowrap">
+              <Burger opened={navOpened} onClick={toggleNav} hiddenFrom="sm" size="sm" aria-label="Toggle navigation" />
+              <ThemeIcon variant="gradient" gradient={{ from: 'violet', to: 'cyan' }} radius="md">
+                <IconSparkles size={18} />
+              </ThemeIcon>
+              <Text fw={700} size="lg">
+                CreatorMatch
+              </Text>
+              <Text c="dimmed" size="sm" visibleFrom="md">
+                campaigns &amp; audience
+              </Text>
+            </Group>
+            <ColorSchemeToggle />
+          </Group>
+        </AppShell.Header>
+        <AppShell.Navbar p="xs">
+          {renderLinks(mainLinks)}
+          <Text size="xs" c="dimmed" fw={600} tt="uppercase" mt="md" mb={4} px="xs">
+            Planner (demo)
           </Text>
-          <Text c="dimmed" size="sm" visibleFrom="sm">
-            campaigns &amp; audience
-          </Text>
-        </Group>
-      </AppShell.Header>
-      <AppShell.Navbar p="xs">
-        {renderLinks(mainLinks)}
-        <Text size="xs" c="dimmed" fw={600} tt="uppercase" mt="md" mb={4} px="xs">
-          Planner (demo)
-        </Text>
-        {renderLinks(plannerLinks)}
-      </AppShell.Navbar>
-      <AppShell.Main>
-        <Routes>
-          <Route path="/" element={<Navigate to="/match" replace />} />
-          <Route path="/match" element={<WorkspaceRoute tab="match" />} />
-          <Route path="/roster" element={<WorkspaceRoute tab="roster" />} />
-          <Route path="/dashboard" element={<DashboardPage />} />
-          <Route path="/campaigns" element={<CampaignsPage />} />
-          <Route path="/campaigns/:id" element={<CampaignDetailPage />} />
-        </Routes>
-      </AppShell.Main>
-    </AppShell>
+          {renderLinks(plannerLinks)}
+        </AppShell.Navbar>
+        <AppShell.Main>
+          <Routes>
+            <Route path="/" element={<Navigate to="/match" replace />} />
+            <Route path="/match" element={<MatchPage />} />
+            <Route path="/roster" element={<RosterPage />} />
+            <Route path="/dashboard" element={<DashboardPage />} />
+            <Route path="/campaigns" element={<CampaignsPage />} />
+            <Route path="/campaigns/:id" element={<CampaignDetailPage />} />
+          </Routes>
+        </AppShell.Main>
+      </AppShell>
+    </RosterProvider>
   )
 }

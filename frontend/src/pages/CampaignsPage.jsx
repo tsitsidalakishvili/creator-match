@@ -90,6 +90,19 @@ export default function CampaignsPage() {
 
       {!campaigns ? (
         <Loader />
+      ) : campaigns.length === 0 ? (
+        <Card withBorder radius="md" padding="xl">
+          <Stack align="center" gap="xs" py="md">
+            <Text fw={600}>No campaigns yet</Text>
+            <Text c="dimmed" size="sm" ta="center" maw={420}>
+              Create your first campaign brief — set the objective, target audience, channels and
+              budget, then open it to see scored creator matches from your roster.
+            </Text>
+            <Button leftSection={<IconPlus size={16} />} onClick={() => setModalOpen(true)} mt="xs">
+              Create campaign
+            </Button>
+          </Stack>
+        </Card>
       ) : (
         <Grid>
           {campaigns.map((c) => (

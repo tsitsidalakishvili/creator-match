@@ -49,7 +49,7 @@ function scoreColor(score) {
 function MatchCard({ match, onStatusChange }) {
   return (
     <Card withBorder radius="md" padding="lg">
-      <Group align="flex-start" wrap="nowrap">
+      <Group align="flex-start">
         <RingProgress
           size={92}
           thickness={9}
